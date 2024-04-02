@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     "Content-Type": "application/json",
   };
 
-  const apiURL = `http://164.92.105.13:5001/backend-api/gc?type=${type}&tone=${tone}&length=${length}&about=${about}&keywords=${keywords}`;
+  const apiURL = `http://127.0.0.1:5001/backend-api/gc?type=${type}&tone=${tone}&length=${length}&about=${about}&keywords=${keywords}`;
   const res = await fetch(apiURL, {
     method: "GET",
     headers: header,
