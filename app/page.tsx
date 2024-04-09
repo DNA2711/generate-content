@@ -1,11 +1,9 @@
 "use client";
-
 import * as React from "react";
 import { useState } from "react";
-import { json } from "stream/consumers";
-import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import Result from "./result";
+import Image from "next/image";
 
 interface ContentOptionData {
   id: number;
@@ -106,16 +104,44 @@ const contentOptions: ContentOptionData[] = [
     description: "Choose the length of generated content",
     options: ["Short", "Medium", "Long", "Very long"],
   },
+  {
+    id: 4,
+    label: "Language",
+    description: "Choose the language of generated content",
+    options: [
+      "English",
+      "Vietnamese",
+      "Hindi",
+      "Chinese",
+      "Japanese",
+      "Standard Arabic",
+      "Spanish",
+      "French",
+      "Russian",
+      "Portuguese",
+      "German",
+      "Italian",
+      "Turkish",
+      "Dutch",
+      "Polish",
+      "Korean",
+      "Indonesian",
+      "Thai",
+      "Romanian",
+      "Greek",
+    ],
+  },
 ];
 
-function MyComponent() {
-  const [selectedContentType, setSelectedContentType] = useState("");
-  const [selectedToneOfVoice, setSelectedToneOfVoice] = useState("");
-  const [selectedContentLength, setSelectedContentLength] = useState("");
-  const [options, setOptions] = useState<{ key: number; opt: string }[]>([]);
+function Page1() {
+  const [options, setOptions] = useState<{ key: number; opt: string }[]>([
+    { key: 1, opt: "Posts" },
+    { key: 2, opt: "Neutral" },
+    { key: 3, opt: "Short" },
+    { key: 4, opt: "English" },
+  ]);
 
   const handleChangeOption = (key: number, opt: string) => {
-    // console.log(key, opt);
     setOptions((prev) => {
       const index = prev.findIndex((item) => item.key === key);
       if (index >= 0) {
@@ -130,10 +156,9 @@ function MyComponent() {
     const index = options.findIndex((item) => item.key === key);
     return index >= 0 ? options[index].opt : "";
   };
-  console.log(options);
-  // [Posts, Neutral, Short
   const [contentIdea, setContentIdea] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [emotion, setEmotion] = React.useState("");
 
   const handleContentIdeaChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -145,26 +170,28 @@ function MyComponent() {
     setKeywords(event.target.value);
   };
 
-  const pathApi = `api/generate-content?type=${selectedContentType}&tone=${selectedToneOfVoice}&length=${selectedContentLength}&about=${contentIdea}&keywords=${keywords}`;
+  const pathApi = `api/generate-content?type=${findOption(1)}&tone=${findOption(
+    2
+  )}&length=${findOption(
+    3
+  )}&about=${contentIdea}&keywords=${keywords}&language=${findOption(4)}`;
 
   const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
 
   const { trigger, isMutating } = useSWRMutation(pathApi, sendRequest);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = {
-      contentIdea,
-      keywords,
-    };
-
     const result = await trigger();
     if (result.status === 200) {
-      setContent(result.content);
+      setContent(result.outline);
+      setEmotion(result.emotion);
+      setTitle(result.title);
     }
   };
 
-  console.log(content);
   return (
     <>
       {content === "" ? (
@@ -173,15 +200,79 @@ function MyComponent() {
             <div className="flex flex-col items-center px-16 pt-12 pb-20 bg-white max-md:px-5">
               <div className="flex flex-col w-full max-w-[1162px] max-md:max-w-full">
                 <header className="flex flex-col pl-8 text-black max-md:pl-5 max-md:max-w-full">
-                  <h1 className="self-center ml-4 text-6xl font-bold tracking-tighter max-md:max-w-full max-md:text-4xl">
-                    Create Your Content with AI
-                  </h1>
-                  <div className="flex gap-5 justify-between mt-16 text-2xl leading-9 max-md:flex-wrap max-md:mt-10 max-md:max-w-full">
-                    <div>Write your main topic</div>
-                    <div className="text-stone-900">
-                      Effortless and time-saving
+                  <div className="flex gap-5 justify-between px-px w-full text-sm whitespace-nowrap text-zinc-700 max-md:flex-wrap max-md:max-w-full">
+                    <Image
+                      loading="lazy"
+                      src="/logo.png"
+                      alt=""
+                      className="shrink-0 aspect-[1.09] w-[53px]"
+                      width={53}
+                      height={49}
+                    />
+                  </div>
+                  <div className="flex gap-5 max-md:flex-col max-md:gap-0">
+                    <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
+                      <div className="flex flex-col items-start self-stretch my-auto text-xl tracking-normal max-md:mt-10 max-md:max-w-full">
+                        <div className="self-stretch text-5xl font-bold tracking-tight max-md:max-w-full max-md:text-4xl">
+                          <span className="">
+                            <h1 className="bg-gradient-to-r from-blue-300 to-indigo-600 bg-clip-text inline-block text-transparent">
+                              {" "}
+                              CREAT YOUR CONTENT <br /> WITH AI
+                            </h1>
+                          </span>
+                        </div>
+
+                        <div className="flex gap-5 mt-10 text-neutral-800 max-md:mt-10">
+                          <Image
+                            loading="lazy"
+                            src="/icon.png"
+                            alt=""
+                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
+                            width={39}
+                            height={39}
+                          />
+                          <div className="flex-auto my-auto">
+                            Write your main topic
+                          </div>
+                        </div>
+                        <div className="flex gap-5 mt-4 text-neutral-800">
+                          <Image
+                            loading="lazy"
+                            src="/icon.png"
+                            alt=""
+                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
+                            width={39}
+                            height={39}
+                          />
+                          <div className="flex-auto my-auto">
+                            Effortless and time-saving
+                          </div>
+                        </div>
+                        <div className="flex gap-5 mt-4 text-neutral-800">
+                          <Image
+                            loading="lazy"
+                            src="/icon.png"
+                            alt=""
+                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
+                            width={39}
+                            height={39}
+                          />
+                          <div className="flex-auto my-auto">
+                            SEO-friendly content
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>SEO-friendly content</div>
+                    <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
+                      <Image
+                        loading="lazy"
+                        src="/anh1.png"
+                        alt=""
+                        className="grow w-full aspect-[1.04] max-md:mt-10 max-md:max-w-full"
+                        width={624}
+                        height={600}
+                      />
+                    </div>
                   </div>
                 </header>
                 <section>
@@ -205,10 +296,11 @@ function MyComponent() {
                     What is your content about?
                   </h2>
                   <textarea
-                    className="px-7 pt-6 pb-56 mt-10 text-sm font-semibold tracking-wide leading-6 rounded-md border border-solid bg-stone-50 border-stone-300 text-black max-md:px-5 max-md:pb-10 max-md:max-w-full w-full"
+                    className="px-7 pt-6 pb-56 mt-10 text-sm font-semibold tracking-wide leading-6 rounded-md border border-solid bg-stone-50 border-stone-300 text-black max-md:px-5 max-md:pb-10 max-md:max-w-full w-full resize-none"
                     placeholder="Let us know more about your content idea. For example: Article about how to use WordPress to dive into website development including tutorials how to use it in a simple way..."
                     value={contentIdea}
                     onChange={handleContentIdeaChange}
+                    required
                   />
                   <div className="mt-2 text-sm font-semibold tracking-wide leading-6 text-zinc-500 max-md:max-w-full">
                     Enter at least 10 characters
@@ -236,9 +328,10 @@ function MyComponent() {
                     Press Enter key to finalize a keyword
                   </div>
                 </section>
+
                 <button
                   type="submit"
-                  className="justify-center self-end px-10 py-4 mt-7 mr-16 text-xl font-bold tracking-wide leading-7 text-center text-white rounded-md bg-zinc-500 max-md:px-5 max-md:mr-2.5"
+                  className="justify-center self-end px-10 py-4 mt-7 mr-16 text-xl font-bold tracking-wide leading-7 text-center text-white rounded-md bg-gradient-to-r from-blue-300 to-indigo-600 max-md:px-5 max-md:mr-2.5"
                 >
                   {isMutating ? "Generating..." : "Generate Content"}
                 </button>
@@ -248,11 +341,11 @@ function MyComponent() {
         </>
       ) : (
         <>
-          <Result content={content} config={options} />
+          <Result content={content} config={options} data={title} />
         </>
       )}
     </>
   );
 }
 
-export default MyComponent;
+export default Page1;
