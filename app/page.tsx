@@ -2,8 +2,15 @@
 import * as React from "react";
 import { useState } from "react";
 import useSWRMutation from "swr/mutation";
-import Result from "./result";
-import Image from "next/image";
+import ContentConfig from "./ContentConfig";
+import Head1 from "./components/Head1";
+import styles from "./styles/Home.module.css";
+import { LanguageSelector } from "./components/LanguageSelector";
+import { Inter } from "next/font/google";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
+
+const inter = Inter({ subsets: ["latin"] });
 
 interface ContentOptionData {
   id: number;
@@ -39,22 +46,27 @@ const ContentOption: React.FC<ContentOptionProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-      <div className="flex flex-col grow py-1.5 text-sm font-semibold tracking-wide max-md:mt-10">
-        <div className=" text-slate-800">{data.label}</div>
-        <select
-          value={selectedOption}
-          onChange={handleOptionChange}
-          className="flex gap-5 justify-between px-6 py-5 mt-3.5 whitespace-nowrap rounded-md border border-solid bg-stone-50 border-zinc-300 leading-[200%] text-neutral-500 max-md:pr-5"
-        >
-          {data.options.map((option, index) => (
-            <option key={index} value={option} className="">
-              {option}
-            </option>
-          ))}
-        </select>
+    <div className=" max-md:ml-0 max-md:w-full">
+      <div className="  max-md:mt-10">
+        <div className="flex items-center  ">
+          <div className=" w-1/2 text-xl">{data.label}</div>
+
+          <div className="w-1/2">
+            <select
+              value={selectedOption}
+              onChange={handleOptionChange}
+              className="flex px-5 py-3 mt-2  w-full rounded-md border border-solid bg-stone-50 border-zinc-300 text-neutral-500 max-md:pr-5"
+            >
+              {data.options.map((option, index) => (
+                <option key={index} value={option} className="">
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="mb-6 leading-6 text-zinc-500">{data.description}</div>
       </div>
-      <div className="mt-4 leading-6 text-zinc-500">{data.description}</div>
     </div>
   );
 };
@@ -152,13 +164,19 @@ function Page1() {
       }
     });
   };
+
   const findOption = (key: number) => {
     const index = options.findIndex((item) => item.key === key);
     return index >= 0 ? options[index].opt : "";
   };
+
   const [contentIdea, setContentIdea] = useState("");
   const [keywords, setKeywords] = useState("");
   const [emotion, setEmotion] = React.useState("");
+  const [links, setLinks] = useState("");
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [outline_id, setoutline_id] = useState("");
 
   const handleContentIdeaChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -170,25 +188,26 @@ function Page1() {
     setKeywords(event.target.value);
   };
 
-  const pathApi = `api/generate-content?type=${findOption(1)}&tone=${findOption(
-    2
-  )}&length=${findOption(
-    3
-  )}&about=${contentIdea}&keywords=${keywords}&language=${findOption(4)}`;
+  const handleLinksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLinks(event.target.value);
+  };
 
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
+  const pathApi = `api/generate-content?type=${findOption(1)}
+  &tone=${findOption(2)}
+  &length=${findOption(3)}
+  &language=${findOption(4)}
+  &about=${contentIdea}&keywords=${keywords}&links=${links}`;
 
   const { trigger, isMutating } = useSWRMutation(pathApi, sendRequest);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const result = await trigger();
-    if (result.status === 200) {
+    if (result) {
       setContent(result.outline);
       setEmotion(result.emotion);
       setTitle(result.title);
+      setoutline_id(result.outline_id);
     }
   };
 
@@ -197,90 +216,15 @@ function Page1() {
       {content === "" ? (
         <>
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-col items-center px-16 pt-12 pb-20 bg-white max-md:px-5">
-              <div className="flex flex-col w-full max-w-[1162px] max-md:max-w-full">
-                <header className="flex flex-col pl-8 text-black max-md:pl-5 max-md:max-w-full">
-                  <div className="flex gap-5 justify-between px-px w-full text-sm whitespace-nowrap text-zinc-700 max-md:flex-wrap max-md:max-w-full">
-                    <Image
-                      loading="lazy"
-                      src="/logo.png"
-                      alt=""
-                      className="shrink-0 aspect-[1.09] w-[53px]"
-                      width={53}
-                      height={49}
-                    />
-                  </div>
-                  <div className="flex gap-5 max-md:flex-col max-md:gap-0">
-                    <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-                      <div className="flex flex-col items-start self-stretch my-auto text-xl tracking-normal max-md:mt-10 max-md:max-w-full">
-                        <div className="self-stretch text-5xl font-bold tracking-tight max-md:max-w-full max-md:text-4xl">
-                          <span className="">
-                            <h1 className="bg-gradient-to-r from-blue-300 to-indigo-600 bg-clip-text inline-block text-transparent">
-                              {" "}
-                              CREAT YOUR CONTENT <br /> WITH AI
-                            </h1>
-                          </span>
-                        </div>
-
-                        <div className="flex gap-5 mt-10 text-neutral-800 max-md:mt-10">
-                          <Image
-                            loading="lazy"
-                            src="/icon.png"
-                            alt=""
-                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
-                            width={39}
-                            height={39}
-                          />
-                          <div className="flex-auto my-auto">
-                            Write your main topic
-                          </div>
-                        </div>
-                        <div className="flex gap-5 mt-4 text-neutral-800">
-                          <Image
-                            loading="lazy"
-                            src="/icon.png"
-                            alt=""
-                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
-                            width={39}
-                            height={39}
-                          />
-                          <div className="flex-auto my-auto">
-                            Effortless and time-saving
-                          </div>
-                        </div>
-                        <div className="flex gap-5 mt-4 text-neutral-800">
-                          <Image
-                            loading="lazy"
-                            src="/icon.png"
-                            alt=""
-                            className="shrink-0 bg-white rounded-full aspect-square h-[39px] w-[39px]"
-                            width={39}
-                            height={39}
-                          />
-                          <div className="flex-auto my-auto">
-                            SEO-friendly content
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-                      <Image
-                        loading="lazy"
-                        src="/anh1.png"
-                        alt=""
-                        className="grow w-full aspect-[1.04] max-md:mt-10 max-md:max-w-full"
-                        width={624}
-                        height={600}
-                      />
-                    </div>
-                  </div>
-                </header>
+            <div className="flex flex-col items-center  bg-slate-950 max-md:px-5">
+              <div className="flex flex-col w-full max-w-[1200px] max-md:max-w-full">
+                <Head1 />
                 <section>
-                  <h2 className="mt-20 text-2xl font-black leading-9 text-black max-md:mt-10 max-md:max-w-full">
-                    What do you want to make today?
+                  <h2 className="mt-20 text-2xl font-black leading-9 max-md:mt-10 max-md:max-w-full">
+                    WHAT WOULD YOU LIKE TO WRITE ?{" "}
                   </h2>
                   <div className="mt-11 max-md:pr-5 max-md:mt-10 max-md:max-w-full">
-                    <div className="flex gap-5 max-md:flex-col max-md:gap-0">
+                    <div className=" gap-5 max-md:flex-col max-md:gap-0">
                       {contentOptions.map((option, index) => (
                         <ContentOption
                           key={index}
@@ -291,49 +235,63 @@ function Page1() {
                     </div>
                   </div>
                 </section>
-                <section>
-                  <h2 className="mt-12 text-2xl font-black leading-9 text-black max-md:mt-10 max-md:max-w-full">
-                    What is your content about?
-                  </h2>
+
+                <section className="flex">
+                  <div className="flex w-1/2">
+                    <h2 className="mt-8 text-xl  leading-9  max-md:mt-10 max-md:max-w-full">
+                      What is your content about?
+                    </h2>
+                    <p className="text-red-500 mt-10 ml-2">*</p>
+                  </div>
+
                   <textarea
-                    className="px-7 pt-6 pb-56 mt-10 text-sm font-semibold tracking-wide leading-6 rounded-md border border-solid bg-stone-50 border-stone-300 text-black max-md:px-5 max-md:pb-10 max-md:max-w-full w-full resize-none"
+                    className="px-7 pt-6 pb-56 mt-10 text-xl font-semibold tracking-wide leading-6 rounded-md border border-solid  max-md:px-5 max-md:pb-10 max-md:max-w-full w-1/2 resize-none text-black"
                     placeholder="Let us know more about your content idea. For example: Article about how to use WordPress to dive into website development including tutorials how to use it in a simple way..."
                     value={contentIdea}
                     onChange={handleContentIdeaChange}
                     required
                   />
-                  <div className="mt-2 text-sm font-semibold tracking-wide leading-6 text-zinc-500 max-md:max-w-full">
-                    Enter at least 10 characters
-                  </div>
                 </section>
-                <section>
-                  <div className="flex gap-5 self-start mt-5 leading-[150%] max-md:flex-wrap">
-                    <h2 className="text-2xl font-black text-black max-md:max-w-full">
+
+                <section className="flex mt-8">
+                  <div className="flex w-1/2 gap-5 self-start mt-5  max-md:flex-wrap flex-col">
+                    <h2 className="text-xl  max-md:max-w-full">
                       What are the focus keywords of your content?
                     </h2>
                     <div className="text-xl text-zinc-500">Optional</div>
                   </div>
-                  <div className="mt-7 text-sm leading-5 text-zinc-500 max-md:max-w-full">
-                    If you skip this part. AI will automatically generate
-                    keyword suggestions after you generate the content
-                  </div>
+
                   <input
                     type="text"
-                    className="justify-center items-start px-5 py-5 mt-2.5 text-sm tracking-wide leading-7 rounded-md border border-solid bg-stone-50 border-neutral-200 text-black max-md:px-5 max-md:max-w-full w-full"
+                    className="justify-center items-start px-5 py-5 mt-2.5 text-sm tracking-wide leading-7 rounded-md border border-solid bg-stone-50 border-neutral-200 text-black max-md:px-5 max-md:max-w-full w-1/2"
                     placeholder="Example: website development. WordPress tutorial, ..."
                     value={keywords}
                     onChange={handleKeywordsChange}
                   />
-                  <div className="mt-2.5 text-sm leading-5 text-zinc-500 max-md:max-w-full">
-                    Press Enter key to finalize a keyword
+                </section>
+
+                <section className="flex mt-8">
+                  <div className="flex flex-col gap-5 self-start mt-5  max-md:flex-wrap w-1/2">
+                    <h2 className="text-xl max-md:max-w-full">
+                      What is the content you want to write similar to?{" "}
+                    </h2>
+                    <div className="text-xl text-zinc-500">Optional</div>
                   </div>
+
+                  <input
+                    type="text"
+                    className="justify-center items-start px-5 py-5 mt-2.5 text-sm tracking-wide leading-7 rounded-md border border-solid  border-white text-black max-md:px-5 max-md:max-w-full w-1/2 opacity-[6%]"
+                    placeholder="Example: https://aicontent.dealsquery.com/"
+                    value={links}
+                    onChange={handleLinksChange}
+                  />
                 </section>
 
                 <button
                   type="submit"
                   className="justify-center self-end px-10 py-4 mt-7 mr-16 text-xl font-bold tracking-wide leading-7 text-center text-white rounded-md bg-gradient-to-r from-blue-300 to-indigo-600 max-md:px-5 max-md:mr-2.5"
                 >
-                  {isMutating ? "Generating..." : "Generate Content"}
+                  {isMutating ? "Generating..." : "Generate Outline"}
                 </button>
               </div>
             </div>
@@ -341,7 +299,16 @@ function Page1() {
         </>
       ) : (
         <>
-          <Result content={content} config={options} data={title} />
+          <ContentConfig
+            content={content}
+            config={options}
+            data={title}
+            emotion={emotion}
+            contentIdea={contentIdea}
+            keywords={keywords}
+            links={links}
+            outline_id={outline_id}
+          />
         </>
       )}
     </>

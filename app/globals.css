@@ -31,3 +31,10 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: "UTM Ericsson Capital";
+  src: url("/UTM Ericsson Capital.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
