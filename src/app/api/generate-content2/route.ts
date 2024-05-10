@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
   };
 
   const apiURL = `http://164.92.105.13:5001/backend-api/content?outline_id=${id}`;
-  console.log(apiURL);
   const res = await fetch(apiURL, {
     method: "GET",
     headers: header,

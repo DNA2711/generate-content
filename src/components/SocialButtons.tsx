@@ -1,12 +1,14 @@
+import React from "react";
+
 const SocialButtons = () => {
   return (
     <div>
-      <div className="pt-3 flex flex-row max-w-full justify-center">
+      <div className="flex max-w-full flex-row justify-center pt-3">
         <button
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-[#1877f2] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg mr-5"
+          className="mb-2 mr-5 inline-block rounded bg-[#1877f2] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
@@ -23,7 +25,7 @@ const SocialButtons = () => {
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-[#ea4335] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg mr-5"
+          className="mb-2 mr-5 inline-block rounded bg-[#ea4335] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
@@ -40,7 +42,7 @@ const SocialButtons = () => {
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-[#0088cc] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg mr-5"
+          className="mb-2 mr-5 inline-block rounded bg-[#0088cc] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
@@ -57,7 +59,7 @@ const SocialButtons = () => {
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-black px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+          className="mb-2 inline-block rounded border bg-black text-white px-8 py-4 text-xs font-medium uppercase leading-normal  shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
@@ -71,12 +73,12 @@ const SocialButtons = () => {
         </button>
       </div>
 
-      <div className="pt-3 justify-center flex flex-row max-w-full">
+      <div className="flex max-w-full flex-row justify-center pt-3">
         <button
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-[#ff4500] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg mr-5"
+          className="mb-2 mr-5 inline-block rounded bg-[#ff4500] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
@@ -93,7 +95,7 @@ const SocialButtons = () => {
           type="button"
           data-twe-ripple-init
           data-twe-ripple-color="light"
-          className="mb-2 inline-block rounded bg-[#0077b5] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg mr-5"
+          className="mb-2 mr-5 inline-block rounded bg-[#0077b5] px-8 py-4 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         >
           <span className="[&>svg]:h-4 [&>svg]:w-4">
             <svg
